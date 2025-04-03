@@ -1,83 +1,82 @@
 // Variables
-let playerName = "";
-let credits = 100;
-let currentSpin = 0;
-const maxSpins = 3;
+let jugadorNombre = "";
+let creditos = 100;
+let tiradas = 0;
+const maxTiradas = 3;
 
-// Elementos del DOM
-const nameScreen = document.getElementById("name-screen");
-const gameScreen = document.getElementById("game-screen");
-const endScreen = document.getElementById("end-screen");
-const nameInput = document.getElementById("name-input");
-const playerNameDisplay = document.getElementById("player-name");
-const creditsDisplay = document.getElementById("credits");
-const confidenceQuestion = document.getElementById("confidence-question");
-const betSection = document.getElementById("bet-section");
-const spinBtn = document.getElementById("spin-btn");
+// Pantallas
+const nombreScreen = document.getElementById("nombre-screen");
+const juegoScreen = document.getElementById("juego-screen");
+const finalScreen = document.getElementById("final-screen");
 
-// Inicio: Pedir nombre
-document.getElementById("start-btn").addEventListener("click", () => {
-  playerName = nameInput.value.trim();
-  if (playerName) {
-    playerNameDisplay.textContent = playerName;
-    nameScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    showConfidenceQuestion();
+// Nombre
+document.getElementById("empezar-btn").addEventListener("click", () => {
+  jugadorNombre = document.getElementById("nombre-input").value.trim();
+  if (jugadorNombre) {
+    document.getElementById("jugador-nombre").textContent = jugadorNombre;
+    nombreScreen.classList.add("hidden");
+    juegoScreen.classList.remove("hidden");
+    mostrarConfianzaQuestion();
   } else {
     alert("¡Escribe tu nombre!");
   }
 });
 
-// Mostrar pregunta de confianza
-function showConfidenceQuestion() {
-  confidenceQuestion.classList.remove("hidden");
-  betSection.classList.add("hidden");
+// Confianza
+function mostrarConfianzaQuestion() {
+  document.getElementById("confianza-question").classList.remove("hidden");
+  document.getElementById("apuesta-section").classList.add("hidden");
 }
 
-// Confirmar confianza y mostrar apuestas
-document.getElementById("confirm-confidence").addEventListener("click", () => {
-  const confidence = parseInt(document.getElementById("confidence-input").value);
-  if (confidence >= 1 && confidence <= 10) {
-    confidenceQuestion.classList.add("hidden");
-    betSection.classList.remove("hidden");
+document.getElementById("confirmar-confianza").addEventListener("click", () => {
+  const confianza = parseInt(document.getElementById("confianza-input").value);
+  if (confianza >= 1 && confianza <= 10) {
+    document.getElementById("confianza-question").classList.add("hidden");
+    document.getElementById("apuesta-section").classList.remove("hidden");
   } else {
     alert("¡Escribe un número del 1 al 10!");
   }
 });
 
-// Girar ruleta
-spinBtn.addEventListener("click", () => {
-  const betAmount = parseInt(document.getElementById("bet-amount").value);
-  const selectedColor = document.querySelector(".color-btn.active")?.dataset.multiplier;
+// Girar ruleta (usa TU ANIMACIÓN ORIGINAL)
+document.getElementById("girar-btn").addEventListener("click", () => {
+  const apuesta = parseInt(document.getElementById("apuesta-cantidad").value);
+  const colorSeleccionado = document.querySelector(".color-btn.active")?.dataset.multiplicador;
 
-  if (!betAmount || betAmount > credits || !selectedColor) {
+  if (!apuesta || apuesta > creditos || !colorSeleccionado) {
     alert("¡Apuesta inválida!");
     return;
   }
 
-  // Simular ruleta
-  const result = spinRoulette();
-  const multiplier = result.multiplier;
-  const win = betAmount * multiplier;
+  // Activa tu animación de giro
+  const ruleta = document.getElementById("tu-ruleta");
+  ruleta.classList.add("giro");
 
-  credits -= betAmount;
-  credits += win;
-  creditsDisplay.textContent = credits;
+  // Simula resultado después de la animación (3 segundos)
+  setTimeout(() => {
+    ruleta.classList.remove("giro");
+    const resultado = girarRuleta();
+    const ganancia = apuesta * resultado.multiplicador;
 
-  document.getElementById("result").innerHTML = `
-    <p>¡Ha salido <span style="color:${result.color}">${result.color.toUpperCase()}</span>!</p>
-    <p>${win > 0 ? `Ganaste ${win} créditos` : "Perdiste tu apuesta"}.</p>
-  `;
+    creditos -= apuesta;
+    creditos += ganancia;
+    document.getElementById("creditos").textContent = creditos;
 
-  currentSpin++;
-  if (currentSpin >= maxSpins) {
-    setTimeout(() => {
-      gameScreen.classList.add("hidden");
-      endScreen.classList.remove("hidden");
-    }, 2000);
-  } else {
-    setTimeout(showConfidenceQuestion, 2000);
-  }
+    document.getElementById("resultado").innerHTML = `
+      <p>¡Ha salido <span style="color:${resultado.color}">${resultado.color.toUpperCase()}</span>!</p>
+      <p>${ganancia > 0 ? `Ganaste ${ganancia} créditos` : "Perdiste tu apuesta"}.</p>
+    `;
+
+    tiradas++;
+    if (tiradas >= maxTiradas) {
+      setTimeout(() => {
+        juegoScreen.classList.add("hidden");
+        finalScreen.classList.remove("hidden");
+      }, 2000);
+    } else {
+      setTimeout(mostrarConfianzaQuestion, 2000);
+    }
+  }, 3000); // Espera a que termine la animación
 });
 
 // Seleccionar color
@@ -88,10 +87,10 @@ document.querySelectorAll(".color-btn").forEach(btn => {
   });
 });
 
-// Función ruleta (simplificada)
-function spinRoulette() {
+// Función para resultado (ajusta probabilidades si quieres)
+function girarRuleta() {
   const random = Math.random();
-  if (random < 0.7) return { color: "red", multiplier: 2 };    // 70%
-  if (random < 0.9) return { color: "black", multiplier: 0 };  // 20%
-  return { color: "green", multiplier: 10 };                   // 10%
+  if (random < 0.7) return { color: "rojo", multiplicador: 2 };   // 70%
+  if (random < 0.9) return { color: "negro", multiplicador: 0 };  // 20%
+  return { color: "verde", multiplicador: 10 };                   // 10%
 }
