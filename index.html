@@ -3,46 +3,81 @@
 <head>
   <title>Ruleta Psicología</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Tu CSS original de la ruleta aquí -->
+  <style>
+    /* ESTO ES LO QUE QUIERES CONSERVAR (tu animación) */
+    #tu-ruleta {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .seccion-ruleta {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(50% 50%, 50% 0%, 100% 0%);
+    }
+    .rojo { background: red; transform: rotate(0deg); }
+    .negro { background: black; transform: rotate(120deg); }
+    .verde { background: green; transform: rotate(240deg); }
+    .giro {
+      animation: girar 3s ease-out;
+    }
+    @keyframes girar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(1080deg); }
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <!-- Pantalla Nombre -->
-    <div id="name-screen" class="screen">
-      <h1>¿Cómo te llamas?</h1>
-      <input type="text" id="name-input" placeholder="Tu nombre">
-      <button id="start-btn">Empezar</button>
-    </div>
-
-    <!-- Pantalla Ruleta -->
-    <div id="game-screen" class="screen hidden">
-      <h1>Hola, <span id="player-name"></span>!</h1>
-      <p>Créditos: <span id="credits">100</span></p>
-      
-      <div id="confidence-question" class="question">
-        <p>¿Cuánta confianza tienes (1-10)?</p>
-        <input type="number" id="confidence-input" min="1" max="10">
-        <button id="confirm-confidence">Continuar</button>
-      </div>
-
-      <div id="bet-section" class="hidden">
-        <p>Apuesta:</p>
-        <input type="number" id="bet-amount" min="1" placeholder="Cantidad">
-        <div class="color-options">
-          <button class="color-btn red" data-multiplier="2">Rojo (x2)</button>
-          <button class="color-btn black" data-multiplier="0">Negro (x0)</button>
-          <button class="color-btn green" data-multiplier="10">Verde (x10)</button>
-        </div>
-        <button id="spin-btn">Girar Ruleta</button>
-      </div>
-
-      <div id="result"></div>
-    </div>
-
-    <!-- Pantalla Final -->
-    <div id="end-screen" class="screen hidden">
-      <h1>¡Gracias por jugar!</h1>
-    </div>
+  <!-- Pantalla 1: Nombre -->
+  <div id="nombre-screen" class="screen">
+    <h1>¿Cómo te llamas?</h1>
+    <input type="text" id="nombre-input" placeholder="Tu nombre">
+    <button id="empezar-btn">Empezar</button>
   </div>
+
+  <!-- Pantalla 2: Ruleta (TU CÓDIGO ORIGINAL INTEGRADO) -->
+  <div id="juego-screen" class="screen hidden">
+    <h1>Hola, <span id="jugador-nombre"></span>!</h1>
+    <p>Créditos: <span id="creditos">100</span></p>
+
+    <!-- Pregunta confianza -->
+    <div id="confianza-question">
+      <p>¿Cuánta confianza tienes (1-10)?</p>
+      <input type="number" id="confianza-input" min="1" max="10">
+      <button id="confirmar-confianza">Continuar</button>
+    </div>
+
+    <!-- Apuestas + TU RULETA ANIMADA -->
+    <div id="apuesta-section" class="hidden">
+      <p>Apuesta:</p>
+      <input type="number" id="apuesta-cantidad" min="1" placeholder="Cantidad">
+      <div class="colores-opciones">
+        <button class="color-btn rojo" data-multiplicador="2">Rojo (x2)</button>
+        <button class="color-btn negro" data-multiplicador="0">Negro (x0)</button>
+        <button class="color-btn verde" data-multiplicador="10">Verde (x10)</button>
+      </div>
+      <button id="girar-btn">Girar Ruleta</button>
+      
+      <!-- AQUÍ ESTÁ TU RULETA (la que gira) -->
+      <div id="tu-ruleta">
+        <div class="seccion-ruleta rojo"></div>
+        <div class="seccion-ruleta negro"></div>
+        <div class="seccion-ruleta verde"></div>
+      </div>
+    </div>
+    <div id="resultado"></div>
+  </div>
+
+  <!-- Pantalla 3: Final -->
+  <div id="final-screen" class="screen hidden">
+    <h1>¡Gracias por jugar!</h1>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
